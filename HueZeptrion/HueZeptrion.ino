@@ -239,5 +239,4 @@ void loop() {
   {
     spiTimer = 99;
   }
-  
 }
