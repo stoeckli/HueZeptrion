@@ -4,7 +4,8 @@
 
 #include <SPI.h>
 #include <ESP8266WiFi.h>
-
+#include <UserSettings.h>
+/* uncomment, change and remove above line
 // wifi settings
 const char* ssid = "<your WLAN ID>";
 const char* password = "<your WLAN password>";
@@ -13,6 +14,7 @@ const char* password = "<your WLAN password>";
 const char* bridge_ip = "<your HUB IP>";
 const int port = 80;
 String user="<your HUB user>";
+*/
 
 // HUE commands
 String hue_on="{\"on\":true}";

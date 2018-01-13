@@ -5,20 +5,21 @@
 #include <ESP8266WiFi.h>
 #include <UserSettings.h>
 
-const int button = 2;
-
-/* uncomment, change and remove above line
-// wifi settings
+/* uncomment and delete above line 
+/ wifi settings
 const char* ssid = "<change>";
 const char* password = "<change>";
 
 // HUE settings
+const char* bridge_ip = "<change>";
 const int port = 80;
 String user="<change>";
 */
 
+const int button = 2;
+
 // HUE commands
-String hue_toggle="{\"state\":{\"flag\":true}}";
+String hue_alert="{\"alert\":\"select\"}";
 
 // SPI variables
 uint8_t spiTXdata = 0;
@@ -47,7 +48,7 @@ void hue_control(String command) {
   }
   
   // building string
-  client.println("PUT /api/" + user + "/sensors/14");
+  client.println("PUT /api/" + user + "/groups/1/action");
   client.println("Host: " + String(bridge_ip) + ":" + String(port));
   client.println("User-Agent: ESP8266/1.0");
   client.println("Connection: close");
@@ -107,12 +108,10 @@ void setup() {
 }
 
 void loop() {
-  hue_control(hue_toggle);
-  delay (100);
   while(digitalRead(button) == HIGH) {
     delay (10);  
   }
-  hue_control(hue_toggle);
+  hue_control(hue_alert);
   while(digitalRead(button) == LOW) {
     delay (10);
     }
