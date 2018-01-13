@@ -7,10 +7,13 @@
 const int button = 2;
 
 // wifi settings
+const char* ssid = "<change>";
+const char* password = "<change>";
 
 // HUE settings
 const char* bridge_ip = "10.0.0.165";
 const int port = 80;
+String user="<change>";
 
 // HUE commands
 String hue_toggle="{\"state\":{\"flag\":true}}";
