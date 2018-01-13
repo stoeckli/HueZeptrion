@@ -13,6 +13,7 @@ const char* ssid = "<change>";
 const char* password = "<change>";
 
 // HUE settings
+const char* bridge_ip = "<change>";
 const int port = 80;
 String user="<change>";
 */
