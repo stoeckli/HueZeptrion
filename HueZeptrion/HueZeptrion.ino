@@ -57,11 +57,12 @@ void hue_control(String command) {
   }
   
   // building string
-  client.println("PUT /api/" + user + "/groups/1/action");
+  client.println("PUT /api/" + user + "/groups/1/action HTTP/1.1");
   client.println("Host: " + String(bridge_ip) + ":" + String(port));
   client.println("User-Agent: ESP8266/1.0");
   client.println("Connection: close");
-  client.println("Content-type: text/xml; charset=\"utf-8\"");
+  client.println("Content-type: application/json");
+  client.println("Cache-Control: no-cache");
   client.print("Content-Length: ");
   client.println(command.length());
   client.println();

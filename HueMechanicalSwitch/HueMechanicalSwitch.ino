@@ -48,7 +48,7 @@ void hue_control(String command) {
   }
   
   // building string
-  client.println("PUT /api/" + user + "/sensors/14");
+  client.println("PUT /api/" + user + "/sensors/14  HTTP/1.1");
   client.println("Host: " + String(bridge_ip) + ":" + String(port));
   client.println("User-Agent: ESP8266/1.0");
   client.println("Connection: close");
