@@ -1,13 +1,19 @@
 /*********
   HueZeptrion
+
+  Disable eindows firewall for OTA
+  Engage switch to enable OTA
 *********/
 
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 #include <UserSettings.h>
 
-const int button = 2;
+const int button = 5; //Shelly
 
-/* uncomment, change and remove above line
+/* uncomment and change.  remove UserSettings include
 // wifi settings
 const char* ssid = "<change>";
 const char* password = "<change>";
@@ -20,16 +26,6 @@ String user="<change>";
 
 // HUE commands
 String hue_toggle="{\"state\":{\"flag\":true}}";
-
-// SPI variables
-uint8_t spiTXdata = 0;
-uint8_t spiRXdata;
-uint8_t spiRXold;
-uint8_t spiTimer;
-uint8_t spiScene = 0;
-const int spiLong = 10;
-uint8_t _ss_pin = SS;
-
 
 // send command to hue
 void hue_control(String command) {
@@ -48,7 +44,7 @@ void hue_control(String command) {
   }
   
   // building string
-  client.println("PUT /api/" + user + "/sensors/14  HTTP/1.1");
+  client.println("PUT /api/" + user + "/sensors/30  HTTP/1.1");
   client.println("Host: " + String(bridge_ip) + ":" + String(port));
   client.println("User-Agent: ESP8266/1.0");
   client.println("Connection: close");
@@ -97,17 +93,44 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  // Set up the button pin for input
-  pinMode( button, INPUT_PULLUP );
+  // Set up the button pin for input, no pullup for shelly
+  pinMode( button, INPUT );
 
-  // since GPIO 0 and 2 must be high for booting, pulldown od witch is done by GPIO 0
-  pinMode( 0, OUTPUT );
-  digitalWrite(0, LOW);
+  // when using GPIO 2 , GPIO 0 and 2 must be high for booting, pulldown od witch is done by GPIO 0
+  //pinMode( 0, OUTPUT );
+  //digitalWrite(0, LOW);
 
- 
+ // Port defaults to 8266
+  // ArduinoOTA.setPort(8266);
+
+  // Hostname defaults to esp8266-[ChipID]
+  ArduinoOTA.setHostname("Shelly1-001");
+
+  // No authentication by default
+  // ArduinoOTA.setPassword((const char *)"123");
+
+  ArduinoOTA.onStart([]() {
+    Serial.println("Start");
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+    else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+    else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+    else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+    else if (error == OTA_END_ERROR) Serial.println("End Failed");
+  });
+  ArduinoOTA.begin();
 }
 
 void loop() {
+  ArduinoOTA.handle();
   hue_control(hue_toggle);
   delay (100);
   while(digitalRead(button) == HIGH) {
