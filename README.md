@@ -108,3 +108,4 @@ This branch includes a sketch for an ESP8266-01 to be hooked up to a mechnical o
 }}
 
 
+For OTA to work, Firewall needs to be disabled and Bonjour service. Toggle switch while uploading to enable OTA.
